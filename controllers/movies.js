@@ -26,7 +26,9 @@ const getMovies = (req, res, next) => {
 };
 
 const deleteMovies = (req, res, next) => {
-  MovieModel.findById(req.params.movieId)
+  const owner = req.user._id;
+  const { movieId } = req.params;
+  MovieModel.findOne({ movieId, owner })
     .then((movie) => {
       if (!movie) {
         return next(new NotFoundError('Фильм с указанным id не найден.'));
@@ -35,7 +37,7 @@ const deleteMovies = (req, res, next) => {
     })
     .then((movie) => {
       if (req.user._id === movie.owner.toString()) {
-        return MovieModel.findByIdAndDelete(req.params.movieId)
+        return MovieModel.findOneAndDelete({ movieId, owner })
           .then((deletedMovie) => res.status(200).send(deletedMovie))
           .catch(next);
       }

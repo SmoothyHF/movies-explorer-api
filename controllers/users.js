@@ -2,7 +2,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const UserModel = require('../models/user');
 const BadRequestError = require('../errors/badRequest-error');
-// const NotFoundError = require('../errors/notFound-error');
 const ConflictError = require('../errors/conflict-error');
 
 const { JWT_SECRET = 'SECRET_KEY' } = process.env;
@@ -65,6 +64,9 @@ const updateUserProfile = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return next(new BadRequestError('Переданы некорректные данные при обновлении профиля.'));
+      }
+      if (err.code === 11000) {
+        return next(new ConflictError('Такой email уже зарегистрирован'));
       }
       return next(err);
     });

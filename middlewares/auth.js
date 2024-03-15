@@ -21,7 +21,7 @@ module.exports = (req, res, next) => {
   try {
     payload = jwt.verify(token, JWT_SECRET);
   } catch (err) {
-    return authError(res);
+    return authError(next);
   }
 
   req.user = payload;

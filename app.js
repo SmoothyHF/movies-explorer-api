@@ -1,7 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
-const cors = require('cors');
+// const cors = require('cors');
+const corsHandler = require('./middlewares/corsHandler');
 
 const appRouter = require('./routes/index');
 const errorHandler = require('./middlewares/error-handler');
@@ -16,7 +17,8 @@ mongoose.connect(`${MONGO_URL}`).then();
 
 const app = express();
 
-app.use(cors());
+// app.use(cors());
+app.use(corsHandler);
 
 app.use(express.json());
 
